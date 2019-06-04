@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
@@ -26,12 +27,13 @@ namespace Ajax_Minimal.Models
 		public string ip { get; set; }
 		public string port { get; set; }
 		public int time { get; set; }
-		public List<Location> locList;
+		public List<Location> locList = new List<Location>();
 
 
 		public Location LocationReader()
 		{
 			TcpClient client = new TcpClient(ip, int.Parse(port));
+			client.ReceiveTimeout = 5000;
 			StreamReader reader = new StreamReader(client.GetStream(), Encoding.ASCII);
 			StreamWriter writer = new StreamWriter(client.GetStream(), Encoding.ASCII);
 			// writing proccess
@@ -40,12 +42,16 @@ namespace Ajax_Minimal.Models
 			//reading process
 			writer.Write(lonStr);
 			writer.Flush();
+			//Debug.Print("Sent");
 			string lon = reader.ReadLine().Split(new string[] { "'" }, StringSplitOptions.None)[1];
+			//Debug.Print(lon);
 			writer.Write(latStr);
 			writer.Flush();
+			//Debug.Print("Sent");
 			string lat = reader.ReadLine().Split(new string[] { "'" }, StringSplitOptions.None)[1];
+			//Debug.Print(lat);
 			//close
-			Location result = new Location(int.Parse(lon.Split('.')[0]), int.Parse(lat.Split('.')[0]));
+			Location result = new Location(double.Parse(lon), double.Parse(lat));
 			client.Close();
 			locList.Add(result);
 			return result;

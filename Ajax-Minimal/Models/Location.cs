@@ -4,10 +4,10 @@ namespace Ajax_Minimal.Models
 {
 	public class Location
 	{
-		public float Lon { get; set; }
-		public float Lat { get; set; }
+		public double Lon { get; set; }
+		public double Lat { get; set; }
 
-		public Location(int lon, int lat)
+		public Location(double lon, double lat)
 		{
 			Lon = lon;
 			Lat = lat;

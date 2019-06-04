@@ -11,75 +11,112 @@
     <h2>Test Values :</h2>
     <table>
         <tr>
-            <td>Lon:  </td>
-            <td><p type="text" id="prodLon" size="5"></p></td>
+            <td>Lon: </td>
+            <td>
+                <p type="text" id="prodLon" size="5"></p>
+            </td>
         </tr>
         <tr>
-            <td>Lat:  </td>
-            <td><p type="text" id="prodLat" size="5"></p></td>
+            <td>Lat: </td>
+            <td>
+                <p type="text" id="prodLat" size="5"></p>
+            </td>
         </tr>
     </table>
 
-    @*<div>
-            <h2>Search  by  Name</h2>
-            <p> Name: </p>
-            <input type="text" id="NameID" size="5" />
-            <input type="button" id="btnSearch" value="Search" />
-            <ul id="lstProducts"></ul>
+    @*
+        <div>
+          <h2>Search by Name</h2>
+          <p> Name: </p>
+          <input type="text" id="NameID" size="5" />
+          <input type="button" id="btnSearch" value="Search" />
+          <ul id="lstProducts"></ul>
         </div>*@
 
 </div>
 
 <style>
-canvas 
-{ 
-    /* Rescale */ 
-    max-width: 97%; 
-    height: auto; 
-    /*border and center*/ 
-    display: block; 
-    margin-left: auto; 
-    margin-right: auto; 
-    border-radius: 8px; 
-    /*background*/
-    background-image: url("/map.png"); 
-    background-position: center; 
-    background-size: 100% 100%; 
-}
+    canvas {
+        /* Rescale */
+        max-width: 97%;
+        height: auto;
+        /*border and center*/
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 8px;
+        /*background*/
+        background-image: url("/map.png");
+        background-position: center;
+        background-size: 100% 100%;
+    }
 </style>
 
 <script type="text/javascript">
-        function notEmpty() {
-            //alert("You entered: ");
-            var c = document.getElementById("myCanvas");
-            var ctx = c.getContext("2d");
-            ctx.canvas.width = window.innerWidth;
-            ctx.canvas.height = window.innerHeight;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(300, 150);
+
+
+    var xPoints = [];
+    var yPoints = [];
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
+    var IntervalTime = @Session["time"] * 1000
+
+    function drawAnimation(xPoint, yPoint)
+    {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.beginPath();
+        //Draw lines
+        ctx.beginPath();
+        for (i = 0; i < xPoints.length - 1; i++) {
+            ctx.moveTo(xPoints[i], yPoints[i]);
+            ctx.stroke();
+            ctx.lineTo(xPoints[i + 1], yPoints[i + 1]);
             ctx.stroke();
         }
-        var IntervalTime = @Session["time"] * 1000
-        myTimer = (function () {
-            $.post( "@Url.Action("GetLocation")").done(function (xml) {
-                    var xmlDoc = $.parseXML( xml ),
-                    $xml = $(xmlDoc),
-                    Lon = parseInt($xml.find("Lon").text());
-                    Lat = parseInt($xml.find("Lat").text());
-                    //Lon = (((Lon + 180) / 360));
-                    //Lat = (((Lat + 90) / 180));
+        //Inner ring
+        ctx.beginPath();
+        ctx.fillStyle = "#FF0000";
+        ctx.arc(xPoints[i], yPoints[i], 3, 0, 2 * Math.PI, true);
+        //Outer ring;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(xPoints[i], yPoints[i], 3, 0, 2 * Math.PI, true);
+        ctx.stroke();
+        
+    }
+    myTimer = (function () {
+        $.post( "@Url.Action("GetLocation")").done(function (xml) {
+            var xmlDoc = $.parseXML( xml ),
+            $xml = $(xmlDoc),
+            Lon = parseInt($xml.find("Lon").text());
+            Lat = parseInt($xml.find("Lat").text());
+            //alert(myCanvas.height);
+            //TEST
+            Lon = Lon + (Math.random() * 10 + 1) + 70
+            Lat = Lat + (Math.random() * 10 + 1) + 50
+            alert(Lat + "," + Lon);
+            //END OF TEST
+            Lon = (((Lon + 180) / 360)) * myCanvas.height;
+            Lat = (((Lat + 90) / 180)) * myCanvas.height;
 
-                    $("#prodLon").text(Lon);
-                    $("#prodLat").text(Lat);
-                    //$("#prodSalary").text(Salary);
+            $("#prodLon").text(Lon);
+            $("#prodLat").text(Lat);
+            //
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+            xPoints.push(parseInt(Lon));
+            yPoints.push(parseInt(Lat));
+            drawAnimation(xPoints, yPoints);
+            //$("#prodSalary").text(Salary);
 
-            });
         });
+    });
 
-        setInterval(myTimer, IntervalTime);
-        myTimer();
-        notEmpty();
+    setInterval(myTimer, IntervalTime);
+    myTimer();
+    //notEmpty();
 
     //testing
     @* $("#btnSearch").click(function () {
