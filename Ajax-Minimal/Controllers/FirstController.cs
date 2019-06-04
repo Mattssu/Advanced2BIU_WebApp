@@ -21,17 +21,42 @@ namespace Ajax_Minimal.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult display(string ip, int port, int time)
+		public ActionResult display(string ip, string port, int time = 0)
+		{
+			InfoModel.Instance.ip = ip;
+			InfoModel.Instance.port = port;
+			InfoModel.Instance.time = time;
+			InfoModel.Instance.isEmpty = false;
+			InfoModel.Instance.locationQueue = new Queue<Location>();
+			//if is either 0 or display a recorded file
+			if (time == 0 && port != null)
+			{
+				Session["time"] = int.Parse(port);
+			}
+			else
+			{
+				Session["time"] = time;
+			}
+			return View();
+		}
+
+		[HttpGet]
+		public ActionResult save(string ip, string port, int speed, int duration, string file)
 		{
 			InfoModel.Instance.ip = ip;
 			InfoModel.Instance.port = port.ToString();
-			InfoModel.Instance.time = time;
-
-			//InfoModel.Instance.ReadData("Dor");
-
-			Session["time"] = time;
-
-
+			InfoModel.Instance.speed = speed;
+			InfoModel.Instance.duration = duration;
+			InfoModel.Instance.fileName = file;
+			InfoModel.Instance.locationQueue = new Queue<Location>();
+			Session["speed"] = speed;
+			Session["duration"] = duration;
+			//
+			string path = "~/SaveFiles/" + file + ".txt";
+			if (System.IO.File.Exists(Server.MapPath(path)))
+			{
+				System.IO.File.Delete(Server.MapPath(path));
+			}
 			return View();
 		}
 
@@ -41,18 +66,42 @@ namespace Ajax_Minimal.Controllers
 		{
 			try
 			{
-				var loc = InfoModel.Instance.LocationReader();
-
+				var loc = InfoModel.Instance.LoadLocation();
 				return ToXml(loc);
 			}
 			catch (Exception e)
 			{
-				Debug.Print("Exited");
+				//Debug.Print("Exited with ERROR");
 				return null;
 			}
-
 		}
 
+		[HttpPost]
+		public string SaveLocation()
+		{
+			try
+			{
+				var loc = InfoModel.Instance.LoadLocation();
+				SaveXml(InfoModel.Instance.fileName, loc);
+				return ToXml(loc);
+			}
+			catch (Exception e)
+			{
+				Debug.Print("Exited with ERROR");
+				return null;
+			}
+		}
+
+		private void SaveXml(string fileName, Location l)
+		{
+			if (fileName != null)
+			{
+				using (System.IO.StreamWriter file = new System.IO.StreamWriter(Server.MapPath("~/SaveFiles/" + fileName + ".txt"), true))
+				{
+					file.WriteLine(l.Lon + " " + l.Lat + " " + l.Throttle + " " + l.Rudder);
+				}
+			}
+		}
 		private string ToXml(Location loc)
 		{
 			//Initiate XML stuff
@@ -68,18 +117,8 @@ namespace Ajax_Minimal.Controllers
 			writer.WriteEndElement();
 			writer.WriteEndDocument();
 			writer.Flush();
+			//
 			return sb.ToString();
 		}
-
-
-		//// POST: First/Search
-		//[HttpPost]
-		//public string Search(string name)
-		//{
-		//    InfoModel.Instance.ReadData(name);
-
-		//    return ToXml(InfoModel.Instance.Employee);
-		//}
-
 	}
 }

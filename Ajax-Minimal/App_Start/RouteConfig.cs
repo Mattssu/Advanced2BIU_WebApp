@@ -17,6 +17,11 @@ namespace Ajax_Minimal
 			routes.MapRoute("display", "display/{ip}/{port}/{time}",
 			defaults: new { controller = "First", action = "display",time = UrlParameter.Optional });
 
+			routes.MapRoute(
+				name: "save",
+				url: "save/{ip}/{port}/{speed}/{duration}/{file}",
+				defaults: new { controller = "First", action = "save" }
+			);
 
 			routes.MapRoute(
 				name: "Default",

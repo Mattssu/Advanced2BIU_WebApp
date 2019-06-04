@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "display";
+    ViewBag.Title = "save";
 }
 
 <div>
@@ -33,9 +33,10 @@
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     //time interval
-    var bool = 0;
-    var time = @Session["time"];
-    var IntervalTime = time * 1000;
+    var speed = @Session["speed"];
+    var duration = @Session["duration"];
+    var times = Math.floor(duration / speed);
+    var IntervalTime = speed * 1000;
     // func to draw lines + dot
     function drawAnimation(xLocation, yLocation)
     {
@@ -59,38 +60,40 @@
         ctx.beginPath();
         ctx.arc(xLocation[i], yLocation[i], 3, 0, 2 * Math.PI, true);
         ctx.stroke();
-        
+
     }
     myTimer = (function () {
-        $.post("@Url.Action("GetLocation")").done(function (xml) {
-            //in case the file dosent exist/empty/done
-            if (xml == "") {
-                alert("Finished Showing");
-                if (bool == 1) {
-                    clearInterval(myInterval);
-                }
-                return;
-            }
-            var xmlDoc = $.parseXML( xml ),
-            $xml = $(xmlDoc),
-            Lon = parseInt($xml.find("Lon").text());
-            Lat = parseInt($xml.find("Lat").text());
-            //normalize
-            Lon = (((Lon + 180) / 360)) * myCanvas.height;
-            Lat = (((Lat + 90) / 180)) * myCanvas.height;
-            //temp files
-            $("#prodLon").text(Lon);
-            $("#prodLat").text(Lat);
-            //saves the locations
-            xLocations.push(parseInt(Lon));
-            yLocations.push(parseInt(Lat));
-            drawAnimation(xLocations, yLocations);
+        if (times == 0) {
+            alert("Finished Saving");
+            clearInterval(myInterval);
+            return;
+        }
+        $.post("@Url.Action("SaveLocation")").done(function (xml) {
+        //in case the file dosent exist/empty
+        if (xml == "") {
+            alert("Finished");
+            clearInterval(myInterval);
+            return;
+        }
+        var xmlDoc = $.parseXML( xml ),
+        $xml = $(xmlDoc),
+        Lon = parseInt($xml.find("Lon").text());
+        Lat = parseInt($xml.find("Lat").text());
+        //normalize
+        Lon = (((Lon + 180) / 360)) * myCanvas.height;
+        Lat = (((Lat + 90) / 180)) * myCanvas.height;
+        //temp files
+        $("#prodLon").text(Lon);
+        $("#prodLat").text(Lat);
+        //saves the locations
+        xLocations.push(parseInt(Lon));
+        yLocations.push(parseInt(Lat));
+        drawAnimation(xLocations, yLocations);
+        times--;
         });
     });
-    if (IntervalTime != 0) {
-        myInterval = setInterval(myTimer, IntervalTime);
-        bool = 1;
-    }
+    var myInterval = setInterval(myTimer, IntervalTime)
     myTimer();
 
 </script>
+
