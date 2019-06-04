@@ -99,7 +99,6 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="map.png" />
     <Content Include="Web.config" />
     <Content Include="Views\First\display.cshtml" />
   </ItemGroup>
@@ -133,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\" />
     <Folder Include="SaveFiles\" />
   </ItemGroup>
   <PropertyGroup>

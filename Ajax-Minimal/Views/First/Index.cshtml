@@ -4,8 +4,28 @@
 }
 
 <body>
-    <img src="~/map.png" id="background" />
+    <img src="~/assets/lost.jpg" id="wallpaper" />
+    <div>
+        <h1 align="center">Should have tried : <b>Display</b> or <b>Save</b> ;)</h1>
+    </div>
 </body>
+
+<style>
+    img {
+        /* Rescale */
+        max-width: 99%;
+        height: auto;
+        /*border and center*/
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        /*background*/
+        background-image: url("/assets/map.png");
+        background-position: center;
+        background-size: 100% 100%;
+    }
+</style>
 
 
 <style>

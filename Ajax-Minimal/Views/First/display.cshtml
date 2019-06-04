@@ -18,7 +18,7 @@
         margin-right: auto;
         border-radius: 8px;
         /*background*/
-        background-image: url("/map.png");
+        background-image: url("/assets/map.png");
         background-position: center;
         background-size: 100% 100%;
     }
@@ -59,7 +59,7 @@
         ctx.beginPath();
         ctx.arc(xLocation[i], yLocation[i], 3, 0, 2 * Math.PI, true);
         ctx.stroke();
-        
+
     }
     myTimer = (function () {
         $.post("@Url.Action("GetLocation")").done(function (xml) {
@@ -92,5 +92,6 @@
         bool = 1;
     }
     myTimer();
+
 
 </script>
