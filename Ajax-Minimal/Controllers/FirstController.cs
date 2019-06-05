@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 
@@ -51,7 +49,7 @@ namespace Ajax_Minimal.Controllers
 			InfoModel.Instance.locationQueue = new Queue<Location>();
 			Session["speed"] = speed;
 			Session["duration"] = duration;
-			//
+			//checks if file with that name exiss already to overwrite
 			string path = "~/SaveFiles/" + file + ".txt";
 			if (System.IO.File.Exists(Server.MapPath(path)))
 			{
@@ -69,7 +67,7 @@ namespace Ajax_Minimal.Controllers
 				var loc = InfoModel.Instance.LoadLocation();
 				return ToXml(loc);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				//Debug.Print("Exited with ERROR");
 				return null;
@@ -85,7 +83,7 @@ namespace Ajax_Minimal.Controllers
 				SaveXml(InfoModel.Instance.fileName, loc);
 				return ToXml(loc);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				Debug.Print("Exited with ERROR");
 				return null;

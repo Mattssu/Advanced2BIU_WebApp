@@ -1,0 +1,35 @@
+commit 9a039e6084f9a83b6b2a0f8e42bf21c15be51a8a
+Author: Mattssu <shednic55@gmail.com>
+Date:   Wed Jun 5 01:06:56 2019 +0300
+
+    pure cosmetic changes
+
+commit 2913fb05158690eaa609770e9cb348c75478ac05
+Author: Mattssu <shednic55@gmail.com>
+Date:   Wed Jun 5 00:42:56 2019 +0300
+
+    Done (may have to clean up stuff )
+
+commit bfd16335af79efdc04729e00d5f04b7728b3dda5
+Author: Mattssu <shednic55@gmail.com>
+Date:   Tue Jun 4 17:17:03 2019 +0300
+
+    Drawing now totally works with simulator (test is still there)
+
+commit 477419f71b1e1efc4a0cdd91ef9d1c87bb579ca5
+Author: Mattssu <shednic55@gmail.com>
+Date:   Tue Jun 4 12:44:38 2019 +0300
+
+    Added map support + connection with simulator works + canvas draws line
+
+commit cccbea2b27213da37bd82402ee10a09874e99f69
+Author: Mattssu <shednic55@gmail.com>
+Date:   Mon Jun 3 01:32:20 2019 +0300
+
+    Add project files.
+
+commit 6be79c54e0c8848ffba9effa9b6f86b94bf2e753
+Author: Mattssu <shednic55@gmail.com>
+Date:   Mon Jun 3 01:32:14 2019 +0300
+
+    Add .gitignore and .gitattributes.

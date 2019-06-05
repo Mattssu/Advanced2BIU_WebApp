@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,6 +36,8 @@ namespace Ajax_Minimal.Models
 		public Queue<Location> locationQueue;
 		public const string SCENARIO_FILE = "~/SaveFiles/{0}.txt"; // The Path of the Secnario
 
+		#region LocationLoad
+		//Loads the location
 		public Location LoadLocation()
 		{
 			Location result;
@@ -54,7 +55,7 @@ namespace Ajax_Minimal.Models
 			}
 			return result;
 		}
-
+		// Reads lcoation data from the simulator
 		public Location LocationServer()
 		{
 			TcpClient client = new TcpClient(ip, int.Parse(port));
@@ -86,7 +87,7 @@ namespace Ajax_Minimal.Models
 			locationQueue.Enqueue(result);
 			return result;
 		}
-
+		//Reads lcoation data from a file
 		public Location LocationFile()
 		{
 			string path = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, fileName));
@@ -95,7 +96,7 @@ namespace Ajax_Minimal.Models
 				if (locationQueue.Count() == 0 && isEmpty == false)
 				{
 					isEmpty = true;
-					string[] lines = File.ReadAllLines(path);        // reading all the lines of the file
+					string[] lines = File.ReadAllLines(path);
 					foreach (string line in lines)
 					{
 						//line split into queue ,read from file
@@ -106,13 +107,15 @@ namespace Ajax_Minimal.Models
 				}
 				return locationQueue.Dequeue();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				//Debug.Print("Exited with ERROR");
 				return null;
 			}
 
 		}
+		#endregion
+
 	}
 
 }

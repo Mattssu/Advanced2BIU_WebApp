@@ -80,11 +80,9 @@
         Lon = parseInt($xml.find("Lon").text());
         Lat = parseInt($xml.find("Lat").text());
         //normalize
+        //alert(times)
         Lon = (((Lon + 180) / 360)) * myCanvas.height;
         Lat = (((Lat + 90) / 180)) * myCanvas.height;
-        //temp files
-        $("#prodLon").text(Lon);
-        $("#prodLat").text(Lat);
         //saves the locations
         xLocations.push(parseInt(Lon));
         yLocations.push(parseInt(Lat));
